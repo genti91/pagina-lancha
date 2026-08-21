@@ -83,9 +83,47 @@ entorno serverless.
 - **Marca, email de contacto y video del hero**: `src/lib/site.ts`
 - **Paleta y tipografías**: `src/app/globals.css` y `src/app/[locale]/layout.tsx`
 
-El video del hero es un placeholder de stock (Pexels). Para producción, subí el
-tuyo a `public/videos/hero.mp4` y cambiá `heroVideo` en `src/lib/site.ts` a
-`"/videos/hero.mp4"`.
+### El video del hero
+
+Se sirve desde `public/videos/hero.mp4`. Para cambiarlo alcanza con reemplazar
+ese archivo — no hay que tocar código. Si le querés poner otro nombre, está en
+`heroVideo` dentro de `src/lib/site.ts`.
+
+Recomendaciones para el archivo:
+
+- **Sin audio** (el video va muteado igual) y de **5 a 10 segundos**, cortado
+  para que el loop no se note.
+- **720p o 1080p** alcanza: encima lleva tres capas de oscurecimiento.
+- **Menos de 3 MB.** Es lo primero que carga la página y suele verse desde el
+  celular. Si el tuyo pesa más, recomprimilo:
+
+  ```bash
+  ffmpeg -i original.mp4 -an -vf scale=1280:-2 -c:v libx264 -crf 30 -preset slow -movflags +faststart public/videos/hero.mp4
+  ```
+
+  `-an` saca el audio y `-movflags +faststart` deja los metadatos al principio
+  para que empiece a reproducirse sin bajar el archivo entero.
+
+Mientras el video carga se ve el fondo `abyss` de la paleta, así que no hay
+ningún destello blanco.
+
+#### El loop sin corte
+
+Un `<video loop>` común vuelve al principio de golpe y el salto se nota.
+`src/components/HeroVideo.tsx` monta **dos copias superpuestas** del mismo
+archivo: cuando a la que se ve le queda un segundo para terminar, arranca la
+otra desde cero y hace un fundido entre las dos. El empalme queda escondido
+adentro del cruce.
+
+Dos valores en `src/lib/site.ts` controlan el efecto:
+
+| Valor                  | Qué hace                                                                                                                                                 |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `heroCrossfadeSeconds` | Duración del fundido. Más alto = más suave, pero el ciclo se acorta (con un clip de 5s y 1s de cruce, el ciclo real es de 4s). `0` vuelve al corte seco. |
+| `heroPlaybackRate`     | Velocidad. Bajarla a `0.7` alarga el ciclo y espacia los fundidos, además de darle un aire más tranquilo.                                                |
+
+El navegador descarga el video una sola vez: la segunda copia lo reusa desde
+la caché.
 
 ## Estructura
 
@@ -111,6 +149,7 @@ src/
 │       └── page.tsx      Composición de la landing
 ├── components/
 │   ├── Hero.tsx              100vh con video de fondo y CTA
+│   ├── HeroVideo.tsx         Loop del video con fundido en el empalme
 │   ├── About.tsx             Teaser del proyecto en el astillero
 │   ├── WaitlistForm.tsx      Formulario + mensaje de éxito
 │   ├── LanguageSwitcher.tsx  ES | EN | PT, arriba a la derecha

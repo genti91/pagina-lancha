@@ -9,9 +9,14 @@ export default createMiddleware(routing);
 
 export const config = {
   /**
-   * Se salta la API, los assets internos de Next y cualquier archivo con
-   * extensión (icon.svg, video, etc.). Usamos `[.]` en vez de un punto
-   * escapado para que el patrón sea legible.
+   * Se salta la API, los assets internos de Next y cualquier ruta que
+   * contenga un punto en algún tramo, o sea todos los archivos de `public/`:
+   * icon.svg, videos/hero.mp4, imagenes/foto.jpg, etc.
+   *
+   * El `.*[.].*` tiene que mirar la ruta completa, no solo el primer tramo:
+   * si no, `/videos/hero.mp4` entra al proxy y termina redirigido a
+   * `/en/videos/hero.mp4`, que no existe. Usamos `[.]` en vez de un punto
+   * escapado para que se lea mejor.
    */
-  matcher: ["/((?!api|_next|_vercel|[^/]*[.][^/]*).*)"],
+  matcher: ["/((?!api|_next|_vercel|.*[.].*).*)"],
 };
