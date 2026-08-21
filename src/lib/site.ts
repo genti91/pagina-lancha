@@ -8,14 +8,22 @@ export const site = {
   instagram: "https://instagram.com",
 
   /**
-   * Video del hero (placeholder de stock, Pexels).
-   * Para producción: subí tu propio archivo a `public/videos/hero.mp4`
-   * y reemplazá estas URLs por "/videos/hero.mp4".
+   * Video de fondo del hero. Vive en `public/videos/`, así que se sirve
+   * desde el mismo dominio: para cambiarlo alcanza con reemplazar el archivo.
    */
-  heroVideo: {
-    primary:
-      "https://videos.pexels.com/video-files/854318/854318-hd_1920_1080_25fps.mp4",
-    fallback:
-      "https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_25fps.mp4",
-  },
+  heroVideo: "/videos/hero.mp4",
+
+  /**
+   * Segundos que dura el fundido entre el final del loop y el principio.
+   * Más alto = transición más suave, pero el ciclo se acorta (el video
+   * siguiente arranca antes). Con un clip de 5s, 1s de cruce da un ciclo
+   * efectivo de 4s. Poner 0 vuelve al corte seco.
+   */
+  heroCrossfadeSeconds: 1,
+
+  /**
+   * Velocidad de reproducción. Bajarla a 0.6 - 0.8 alarga el ciclo y le da
+   * un aire más tranquilo al fondo, algo habitual en videos de hero.
+   */
+  heroPlaybackRate: 1,
 } as const;

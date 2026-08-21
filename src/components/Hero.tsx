@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Anchor, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
+import HeroVideo from "@/components/HeroVideo";
 import { site } from "@/lib/site";
 
 const container = {
@@ -29,19 +30,8 @@ export default function Hero() {
       id="inicio"
       className="relative flex h-[100svh] min-h-[38rem] w-full items-center justify-center overflow-hidden"
     >
-      {/* Video de fondo */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover"
-      >
-        <source src={site.heroVideo.primary} type="video/mp4" />
-        <source src={site.heroVideo.fallback} type="video/mp4" />
-      </video>
+      {/* Video de fondo en loop, con fundido en el empalme */}
+      <HeroVideo />
 
       {/* Capas de oscurecimiento para legibilidad */}
       <div className="absolute inset-0 bg-abyss/65" />
