@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "title": "Delta Privé — Coming Soon",
+    "description": "A boat under construction for private journeys through the Tigre Delta. Join the waiting list."
+  },
+  "hero": {
+    "location": "Tigre Delta · Buenos Aires",
+    "titleLine1": "A New Way",
+    "titleLine2": "to Sail the Delta",
+    "subtitle": "Coming Soon",
+    "cta": "Join the waiting list",
+    "scrollLabel": "See more"
+  },
+  "about": {
+    "badge": "Under construction",
+    "titleLine1": "Something remarkable is taking shape",
+    "titleLine2": "at the shipyard",
+    "paragraph1": "We are building a boat designed for one thing only: to sail the Tigre Delta the way few ever have. Fine woods, generous spaces and a crew devoted to a single group per departure.",
+    "paragraph2": "When she is launched, the first journeys will belong to those already on our list.",
+    "pillars": {
+      "boat": {
+        "title": "A brand-new boat",
+        "text": "Designed and built to order at the shipyard, finished down to the last detail."
+      },
+      "groups": {
+        "title": "Small groups",
+        "text": "Private departures for a handful of guests. No shared schedules, no crowded routes."
+      },
+      "routes": {
+        "title": "Curated routes",
+        "text": "Itineraries along the most beautiful rivers and streams of the Delta, tailored to each voyage."
+      }
+    }
+  },
+  "waitlist": {
+    "eyebrow": "Waiting list",
+    "titleLine1": "Be among the first",
+    "titleLine2": "to step aboard",
+    "intro": "Leave us your details and we will let you know before anyone else when bookings open. No spam, just an invitation.",
+    "fields": {
+      "nombre": "First name",
+      "apellido": "Last name",
+      "email": "Email",
+      "telefono": "Phone"
+    },
+    "optional": "(optional)",
+    "submit": "Join the private list",
+    "sending": "Sending",
+    "privacy": "Your details are used only to contact you about the launch.",
+    "success": {
+      "message": "Thank you for your interest, we will be in touch soon.",
+      "aboard": "Welcome aboard"
+    },
+    "errors": {
+      "nombre": "Please enter your first name.",
+      "apellido": "Please enter your last name.",
+      "email": "Please enter a valid email address.",
+      "telefono": "Please check the phone number.",
+      "form": "Please review the highlighted fields.",
+      "server": "We could not save your details right now. Please try again in a few minutes."
+    }
+  },
+  "footer": {
+    "location": "Tigre Delta · Buenos Aires"
+  },
+  "language": {
+    "label": "Language"
+  }
+}

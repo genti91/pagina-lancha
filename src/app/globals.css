@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------
-   Paleta náutica premium
+   Paleta náutica
    abyss      : negro mate azulado (fondo principal)
    navy       : azul marino profundo (superficies)
    champagne  : acento dorado / champán
@@ -18,6 +18,20 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif:
     var(--font-playfair), ui-serif, Georgia, "Times New Roman", serif;
+
+  /* Aparición suave del selector de idioma */
+  --animate-fade-in: fade-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 html {

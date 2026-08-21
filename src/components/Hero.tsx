@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Anchor, ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { site } from "@/lib/site";
 
 const container = {
@@ -21,6 +22,8 @@ const rise = {
 };
 
 export default function Hero() {
+  const t = useTranslations("hero");
+
   return (
     <section
       id="inicio"
@@ -77,7 +80,7 @@ export default function Hero() {
         >
           <span className="h-px w-8 bg-champagne/50" />
           <span className="text-[0.65rem] tracking-[0.4em] text-champagne uppercase sm:text-xs">
-            {site.location}
+            {t("location")}
           </span>
           <span className="h-px w-8 bg-champagne/50" />
         </motion.div>
@@ -86,16 +89,16 @@ export default function Hero() {
           variants={rise}
           className="font-serif text-4xl leading-[1.15] font-light text-pearl sm:text-5xl lg:text-[4rem]"
         >
-          La Nueva Experiencia
+          {t("titleLine1")}
           <span className="mt-2 block text-champagne-soft italic">
-            Premium en el Delta
+            {t("titleLine2")}
           </span>
         </motion.h1>
 
         <motion.div variants={rise} className="mt-12">
           <span className="mx-auto mb-5 block h-px w-16 bg-pearl/25" />
           <p className="text-[0.7rem] tracking-[0.55em] text-pearl/55 uppercase sm:text-xs">
-            {site.subtitle}
+            {t("subtitle")}
           </p>
         </motion.div>
 
@@ -106,7 +109,7 @@ export default function Hero() {
           >
             <span className="absolute inset-0 origin-left scale-x-0 bg-champagne transition-transform duration-600 ease-out group-hover:scale-x-100" />
             <span className="relative z-10 text-[0.7rem] tracking-[0.3em] text-champagne uppercase transition-colors duration-300 group-hover:text-abyss">
-              Anotarse en la lista de espera
+              {t("cta")}
             </span>
           </a>
         </motion.div>
@@ -119,7 +122,7 @@ export default function Hero() {
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1.4 }}
         className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-pearl/40 transition-colors hover:text-champagne"
-        aria-label="Ver más"
+        aria-label={t("scrollLabel")}
       >
         <motion.span
           animate={{ y: [0, 9, 0] }}

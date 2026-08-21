@@ -1,40 +1,22 @@
 "use server";
 
-import { promises as fs } from "fs";
-import path from "path";
+import { appendLead } from "@/lib/sheets";
 import {
   emptyValues,
   type WaitlistFieldErrors,
   type WaitlistState,
 } from "@/lib/waitlist";
-
-/** Archivo que el cliente abre directamente en Excel */
-const CSV_PATH = path.join(process.cwd(), "interesados.csv");
-
-const CSV_HEADER = "Fecha,Nombre,Apellido,Email,Telefono\n";
-
-/** BOM: hace que Excel interprete UTF-8 y muestre bien los acentos */
-const BOM = "\uFEFF";
+import { routing } from "@/i18n/routing";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 const PHONE_RE = /^[+()\d\s.-]{6,25}$/;
 
-/** Escapa un valor para CSV (comillas y separadores) */
-function csvEscape(value: string): string {
-  const clean = value.replace(/[\r\n]+/g, " ").trim();
-  return /[",;]/.test(clean) ? `"${clean.replace(/"/g, '""')}"` : clean;
-}
-
-/** Crea el archivo con encabezado la primera vez y devuelve su contenido */
-async function ensureCsvFile(): Promise<string> {
-  try {
-    return await fs.readFile(CSV_PATH, "utf8");
-  } catch {
-    const initial = BOM + CSV_HEADER;
-    await fs.writeFile(CSV_PATH, initial, "utf8");
-    return initial;
-  }
-}
+const SUCCESS: WaitlistState = {
+  status: "success",
+  errorKey: null,
+  errors: {},
+  values: emptyValues,
+};
 
 export async function joinWaitlist(
   _prevState: WaitlistState,
@@ -49,69 +31,33 @@ export async function joinWaitlist(
 
   // Honeypot: si un bot completa el campo oculto, fingimos éxito y no guardamos.
   if (String(formData.get("website") ?? "").length > 0) {
-    return {
-      status: "success",
-      message: "Gracias por tu interés, nos pondremos en contacto pronto.",
-      errors: {},
-      values: emptyValues,
-    };
+    return SUCCESS;
   }
 
   const errors: WaitlistFieldErrors = {};
-  if (values.nombre.length < 2) errors.nombre = "Ingresá tu nombre.";
-  if (values.apellido.length < 2) errors.apellido = "Ingresá tu apellido.";
-  if (!EMAIL_RE.test(values.email)) errors.email = "Ingresá un email válido.";
+  if (values.nombre.length < 2) errors.nombre = "nombre";
+  if (values.apellido.length < 2) errors.apellido = "apellido";
+  if (!EMAIL_RE.test(values.email)) errors.email = "email";
   if (values.telefono && !PHONE_RE.test(values.telefono)) {
-    errors.telefono = "Revisá el teléfono ingresado.";
+    errors.telefono = "telefono";
   }
 
   if (Object.keys(errors).length > 0) {
-    return {
-      status: "error",
-      message: "Revisá los campos marcados.",
-      errors,
-      values,
-    };
+    return { status: "error", errorKey: "form", errors, values };
   }
 
+  // El idioma viaja en un campo oculto: los Server Actions no pueden leer
+  // el segmento `[locale]` de la URL.
+  const rawLocale = String(formData.get("locale") ?? "");
+  const locale = (routing.locales as readonly string[]).includes(rawLocale)
+    ? rawLocale
+    : routing.defaultLocale;
+
   try {
-    const current = await ensureCsvFile();
-
-    // Evitamos filas duplicadas por email
-    const alreadyRegistered = current
-      .split("\n")
-      .slice(1)
-      .some((line) => line.toLowerCase().includes(values.email.toLowerCase()));
-
-    if (!alreadyRegistered) {
-      const row =
-        [
-          new Date().toISOString(),
-          values.nombre,
-          values.apellido,
-          values.email,
-          values.telefono || "-",
-        ]
-          .map(csvEscape)
-          .join(",") + "\n";
-
-      await fs.appendFile(CSV_PATH, row, "utf8");
-    }
-
-    return {
-      status: "success",
-      message: "Gracias por tu interés, nos pondremos en contacto pronto.",
-      errors: {},
-      values: emptyValues,
-    };
+    await appendLead({ ...values, locale });
+    return SUCCESS;
   } catch (error) {
-    console.error("[waitlist] No se pudo escribir interesados.csv:", error);
-    return {
-      status: "error",
-      message:
-        "No pudimos registrar tus datos en este momento. Intentá nuevamente en unos minutos.",
-      errors: {},
-      values,
-    };
+    console.error("[waitlist] No se pudo guardar en Google Sheets:", error);
+    return { status: "error", errorKey: "server", errors: {}, values };
   }
 }

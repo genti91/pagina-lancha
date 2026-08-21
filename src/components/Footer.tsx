@@ -1,7 +1,10 @@
 import { Anchor } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { site } from "@/lib/site";
 
 export default function Footer() {
+  const t = useTranslations("footer");
+
   return (
     <footer className="border-t border-white/5 px-6 py-14">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
@@ -13,7 +16,7 @@ export default function Footer() {
         </div>
 
         <p className="text-[0.68rem] tracking-[0.2em] text-pearl/30 uppercase">
-          {site.location}
+          {t("location")}
         </p>
 
         <a

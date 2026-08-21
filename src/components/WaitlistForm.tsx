@@ -3,8 +3,13 @@
 import { useActionState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, Loader2 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { joinWaitlist } from "@/app/actions";
-import { initialWaitlistState } from "@/lib/waitlist";
+import {
+  initialWaitlistState,
+  type WaitlistErrorKey,
+  type WaitlistField,
+} from "@/lib/waitlist";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -15,9 +20,27 @@ const fadeUp = {
   },
 };
 
+const fields = [
+  { name: "nombre", type: "text", autoComplete: "given-name", required: true },
+  {
+    name: "apellido",
+    type: "text",
+    autoComplete: "family-name",
+    required: true,
+  },
+  { name: "email", type: "email", autoComplete: "email", required: true },
+  { name: "telefono", type: "tel", autoComplete: "tel", required: false },
+] as const satisfies ReadonlyArray<{
+  name: WaitlistField;
+  type: string;
+  autoComplete: string;
+  required: boolean;
+}>;
+
 type FieldProps = {
   name: string;
   label: string;
+  optionalLabel?: string;
   type?: string;
   required?: boolean;
   autoComplete?: string;
@@ -28,6 +51,7 @@ type FieldProps = {
 function Field({
   name,
   label,
+  optionalLabel,
   type = "text",
   required = false,
   autoComplete,
@@ -41,7 +65,9 @@ function Field({
         className="block text-[0.62rem] tracking-[0.28em] text-pearl/40 uppercase"
       >
         {label}
-        {!required && <span className="ml-2 text-pearl/25">(opcional)</span>}
+        {!required && optionalLabel && (
+          <span className="ml-2 text-pearl/25">{optionalLabel}</span>
+        )}
       </label>
       <input
         id={name}
@@ -69,12 +95,16 @@ function Field({
 }
 
 export default function WaitlistForm() {
+  const t = useTranslations("waitlist");
+  const locale = useLocale();
   const [state, formAction, isPending] = useActionState(
     joinWaitlist,
     initialWaitlistState,
   );
 
   const isSuccess = state.status === "success";
+  const errorFor = (key?: WaitlistErrorKey) =>
+    key ? t(`errors.${key}`) : undefined;
 
   return (
     <section
@@ -90,17 +120,16 @@ export default function WaitlistForm() {
           className="text-center"
         >
           <span className="text-[0.62rem] tracking-[0.4em] text-champagne uppercase">
-            Lista de espera
+            {t("eyebrow")}
           </span>
           <h2 className="mt-8 font-serif text-3xl leading-tight font-light text-pearl sm:text-4xl">
-            Sé de los primeros
+            {t("titleLine1")}
             <span className="block text-champagne-soft italic">
-              en navegarlo
+              {t("titleLine2")}
             </span>
           </h2>
           <p className="mx-auto mt-7 max-w-md text-sm leading-relaxed text-pearl/50">
-            Dejanos tus datos y te avisaremos antes que a nadie cuando abramos
-            las reservas. Sin spam, solo una invitación.
+            {t("intro")}
           </p>
         </motion.div>
 
@@ -127,10 +156,10 @@ export default function WaitlistForm() {
                   />
                 </motion.span>
                 <p className="mt-8 font-serif text-xl leading-relaxed text-pearl">
-                  {state.message}
+                  {t("success.message")}
                 </p>
                 <p className="mt-4 text-[0.7rem] tracking-[0.25em] text-champagne/70 uppercase">
-                  Bienvenido a bordo
+                  {t("success.aboard")}
                 </p>
               </motion.div>
             ) : (
@@ -151,48 +180,41 @@ export default function WaitlistForm() {
                     aria-hidden="true"
                     className="pointer-events-none absolute h-0 w-0 opacity-0"
                   />
+                  {/* Un Server Action no puede leer el segmento [locale] */}
+                  <input type="hidden" name="locale" value={locale} />
 
                   <div className="grid gap-10 sm:grid-cols-2">
-                    <Field
-                      name="nombre"
-                      label="Nombre"
-                      required
-                      autoComplete="given-name"
-                      defaultValue={state.values.nombre}
-                      error={state.errors.nombre}
-                    />
-                    <Field
-                      name="apellido"
-                      label="Apellido"
-                      required
-                      autoComplete="family-name"
-                      defaultValue={state.values.apellido}
-                      error={state.errors.apellido}
-                    />
+                    {fields.slice(0, 2).map((field) => (
+                      <Field
+                        key={field.name}
+                        name={field.name}
+                        label={t(`fields.${field.name}`)}
+                        type={field.type}
+                        required={field.required}
+                        autoComplete={field.autoComplete}
+                        defaultValue={state.values[field.name]}
+                        error={errorFor(state.errors[field.name])}
+                      />
+                    ))}
                   </div>
 
-                  <Field
-                    name="email"
-                    label="Email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    defaultValue={state.values.email}
-                    error={state.errors.email}
-                  />
+                  {fields.slice(2).map((field) => (
+                    <Field
+                      key={field.name}
+                      name={field.name}
+                      label={t(`fields.${field.name}`)}
+                      optionalLabel={t("optional")}
+                      type={field.type}
+                      required={field.required}
+                      autoComplete={field.autoComplete}
+                      defaultValue={state.values[field.name]}
+                      error={errorFor(state.errors[field.name])}
+                    />
+                  ))}
 
-                  <Field
-                    name="telefono"
-                    label="Teléfono"
-                    type="tel"
-                    autoComplete="tel"
-                    defaultValue={state.values.telefono}
-                    error={state.errors.telefono}
-                  />
-
-                  {state.status === "error" && !state.errors.email && (
+                  {state.errorKey === "server" && (
                     <p className="text-center text-[0.75rem] text-red-300/80">
-                      {state.message}
+                      {t("errors.server")}
                     </p>
                   )}
 
@@ -206,15 +228,12 @@ export default function WaitlistForm() {
                       {isPending && (
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
                       )}
-                      {isPending
-                        ? "Enviando"
-                        : "Unirse a la lista de exclusividad"}
+                      {isPending ? t("sending") : t("submit")}
                     </span>
                   </button>
 
                   <p className="text-center text-[0.68rem] leading-relaxed text-pearl/30">
-                    Tus datos se usan únicamente para contactarte sobre el
-                    lanzamiento.
+                    {t("privacy")}
                   </p>
                 </form>
               </motion.div>

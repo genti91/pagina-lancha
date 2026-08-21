@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "title": "Delta Privé — Em breve",
+    "description": "Uma embarcação em construção para passeios privativos pelo Delta do Tigre. Entre para a lista de espera."
+  },
+  "hero": {
+    "location": "Delta do Tigre · Buenos Aires",
+    "titleLine1": "Uma Nova Forma",
+    "titleLine2": "de Navegar o Delta",
+    "subtitle": "Em breve",
+    "cta": "Entrar na lista de espera",
+    "scrollLabel": "Ver mais"
+  },
+  "about": {
+    "badge": "Em construção",
+    "titleLine1": "Algo excepcional está tomando forma",
+    "titleLine2": "no estaleiro",
+    "paragraph1": "Estamos construindo uma embarcação pensada para uma única coisa: percorrer o Delta do Tigre como poucos fizeram. Madeiras nobres, espaços amplos e uma tripulação dedicada a um único grupo por saída.",
+    "paragraph2": "Quando chegar o lançamento ao mar, as primeiras navegações serão de quem já estiver na nossa lista.",
+    "pillars": {
+      "boat": {
+        "title": "Embarcação nova",
+        "text": "Projetada e construída sob medida no estaleiro, com acabamento cuidado até o último detalhe."
+      },
+      "groups": {
+        "title": "Grupos reduzidos",
+        "text": "Saídas privativas para poucos passageiros. Sem horários compartilhados nem roteiros lotados."
+      },
+      "routes": {
+        "title": "Roteiros selecionados",
+        "text": "Itinerários pelos rios e riachos mais bonitos do Delta, adaptados a cada navegação."
+      }
+    }
+  },
+  "waitlist": {
+    "eyebrow": "Lista de espera",
+    "titleLine1": "Seja um dos primeiros",
+    "titleLine2": "a navegar",
+    "intro": "Deixe seus dados e avisaremos você antes de todos quando abrirmos as reservas. Sem spam, apenas um convite.",
+    "fields": {
+      "nombre": "Nome",
+      "apellido": "Sobrenome",
+      "email": "E-mail",
+      "telefono": "Telefone"
+    },
+    "optional": "(opcional)",
+    "submit": "Entrar na lista privativa",
+    "sending": "Enviando",
+    "privacy": "Seus dados são usados apenas para contatá-lo sobre o lançamento.",
+    "success": {
+      "message": "Obrigado pelo seu interesse, entraremos em contato em breve.",
+      "aboard": "Bem-vindo a bordo"
+    },
+    "errors": {
+      "nombre": "Informe seu nome.",
+      "apellido": "Informe seu sobrenome.",
+      "email": "Informe um e-mail válido.",
+      "telefono": "Confira o telefone informado.",
+      "form": "Revise os campos destacados.",
+      "server": "Não conseguimos registrar seus dados agora. Tente novamente em alguns minutos."
+    }
+  },
+  "footer": {
+    "location": "Delta do Tigre · Buenos Aires"
+  },
+  "language": {
+    "label": "Idioma"
+  }
+}

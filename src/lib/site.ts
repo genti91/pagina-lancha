@@ -1,16 +1,9 @@
 /**
- * Configuración única del sitio.
- * Cambiá acá el nombre de la marca, los textos clave y el video del hero
- * sin tocar los componentes.
+ * Configuración del sitio que no depende del idioma.
+ * Los textos traducibles viven en `messages/{es,en,pt}.json`.
  */
 export const site = {
   brand: "Delta Privé",
-  tagline: "Navegación privada por el Delta del Tigre",
-  location: "Delta del Tigre · Buenos Aires",
-  title: "La Nueva Experiencia Premium en el Delta",
-  subtitle: "Próximamente",
-  description:
-    "Una embarcación de primer nivel, actualmente en construcción, para recorridos privados y exclusivos por el Delta del Tigre. Sumate a la lista de espera.",
   contactEmail: "hola@deltaprive.com.ar",
   instagram: "https://instagram.com",
 

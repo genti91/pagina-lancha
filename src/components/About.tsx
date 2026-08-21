@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Compass, Hammer, Ship, Users } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 34 },
@@ -18,24 +19,14 @@ const stagger = {
 };
 
 const pillars = [
-  {
-    icon: Ship,
-    title: "Embarcación a estrenar",
-    text: "Diseñada y construida a medida en astillero, con terminaciones de primer nivel.",
-  },
-  {
-    icon: Users,
-    title: "Grupos reducidos",
-    text: "Salidas privadas para pocos pasajeros. Sin horarios compartidos ni recorridos masivos.",
-  },
-  {
-    icon: Compass,
-    title: "Rutas curadas",
-    text: "Itinerarios por los ríos y arroyos más bellos del Delta, adaptados a cada navegación.",
-  },
-];
+  { key: "boat", icon: Ship },
+  { key: "groups", icon: Users },
+  { key: "routes", icon: Compass },
+] as const;
 
 export default function About() {
+  const t = useTranslations("about");
+
   return (
     <section
       id="experiencia"
@@ -55,7 +46,7 @@ export default function About() {
           >
             <Hammer className="h-3.5 w-3.5 text-champagne" strokeWidth={1.25} />
             <span className="text-[0.6rem] tracking-[0.3em] text-champagne/90 uppercase">
-              En construcción
+              {t("badge")}
             </span>
           </motion.div>
 
@@ -63,9 +54,9 @@ export default function About() {
             variants={fadeUp}
             className="font-serif text-3xl leading-tight font-light text-pearl sm:text-4xl lg:text-[2.75rem]"
           >
-            Algo excepcional está tomando forma
+            {t("titleLine1")}
             <span className="block text-champagne-soft italic">
-              en el astillero
+              {t("titleLine2")}
             </span>
           </motion.h2>
 
@@ -73,18 +64,14 @@ export default function About() {
             variants={fadeUp}
             className="mx-auto mt-10 max-w-2xl text-[0.95rem] leading-relaxed text-pearl/65 sm:text-base"
           >
-            Estamos construyendo una embarcación pensada para una sola cosa:
-            recorrer el Delta del Tigre como pocos lo hicieron. Materiales
-            nobles, espacios amplios y una tripulación dedicada a un único grupo
-            por salida.
+            {t("paragraph1")}
           </motion.p>
 
           <motion.p
             variants={fadeUp}
             className="mx-auto mt-6 max-w-2xl text-[0.95rem] leading-relaxed text-pearl/45"
           >
-            Cuando la botadura llegue, las primeras navegaciones serán para
-            quienes ya estén en nuestra lista.
+            {t("paragraph2")}
           </motion.p>
 
           <motion.span
@@ -100,15 +87,17 @@ export default function About() {
           viewport={{ once: true, amount: 0.2 }}
           className="mt-20 grid gap-12 sm:grid-cols-3 sm:gap-10"
         >
-          {pillars.map(({ icon: Icon, title, text }) => (
-            <motion.div key={title} variants={fadeUp} className="text-center">
+          {pillars.map(({ key, icon: Icon }) => (
+            <motion.div key={key} variants={fadeUp} className="text-center">
               <Icon
                 className="mx-auto h-6 w-6 text-champagne"
                 strokeWidth={1}
               />
-              <h3 className="mt-6 font-serif text-lg text-pearl">{title}</h3>
+              <h3 className="mt-6 font-serif text-lg text-pearl">
+                {t(`pillars.${key}.title`)}
+              </h3>
               <p className="mt-3 text-sm leading-relaxed text-pearl/50">
-                {text}
+                {t(`pillars.${key}.text`)}
               </p>
             </motion.div>
           ))}
