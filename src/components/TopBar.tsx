@@ -12,7 +12,7 @@ import { site } from "@/lib/site";
  */
 export default function TopBar() {
   return (
-    <div className="animate-fade-in absolute inset-x-0 top-0 z-30 flex items-center gap-4 px-6 py-7 sm:px-10 sm:py-9">
+    <header className="animate-fade-in absolute inset-x-0 top-0 z-30 flex items-center gap-4 px-6 py-7 sm:px-10 sm:py-9">
       {/*
         Desde `sm` la marca se centra en la pantalla y sale del flujo, así que
         el `max-w` es lo que evita que llegue a tocar el selector si el nombre
@@ -31,6 +31,6 @@ export default function TopBar() {
       </div>
 
       <LanguageSwitcher className="ml-auto" />
-    </div>
+    </header>
   );
 }

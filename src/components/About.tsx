@@ -44,7 +44,11 @@ export default function About() {
             variants={fadeUp}
             className="mb-10 inline-flex items-center gap-2.5 border border-champagne/25 px-4 py-2"
           >
-            <Hammer className="h-3.5 w-3.5 text-champagne" strokeWidth={1.25} />
+            <Hammer
+              className="h-3.5 w-3.5 text-champagne"
+              strokeWidth={1.25}
+              aria-hidden="true"
+            />
             <span className="text-[0.6rem] tracking-[0.3em] text-champagne/90 uppercase">
               {t("badge")}
             </span>
@@ -92,6 +96,7 @@ export default function About() {
               <Icon
                 className="mx-auto h-6 w-6 text-champagne"
                 strokeWidth={1}
+                aria-hidden="true"
               />
               <h3 className="mt-6 font-serif text-lg text-pearl">
                 {t(`pillars.${key}.title`)}

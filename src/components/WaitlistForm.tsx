@@ -153,6 +153,7 @@ export default function WaitlistForm() {
                   <Check
                     className="h-5 w-5 text-champagne"
                     strokeWidth={1.25}
+                    aria-hidden="true"
                   />
                 </motion.span>
                 <p className="mt-8 font-serif text-xl leading-relaxed text-pearl">
@@ -226,7 +227,10 @@ export default function WaitlistForm() {
                     <span className="absolute inset-0 origin-left scale-x-0 bg-champagne transition-transform duration-600 ease-out group-hover:scale-x-100" />
                     <span className="relative z-10 flex items-center justify-center gap-3 text-[0.7rem] tracking-[0.3em] text-champagne uppercase transition-colors duration-300 group-hover:text-abyss">
                       {isPending && (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        <Loader2
+                          className="h-3.5 w-3.5 animate-spin"
+                          aria-hidden="true"
+                        />
                       )}
                       {isPending ? t("sending") : t("submit")}
                     </span>

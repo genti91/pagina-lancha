@@ -2,9 +2,16 @@
  * Configuración del sitio que no depende del idioma.
  * Los textos traducibles viven en `messages/{es,en,pt}.json`.
  */
+/**
+ * Email de ejemplo, todavía sin reemplazar. Mientras `contactEmail` valga esto,
+ * los datos estructurados omiten el campo: declararle a Google un email que no
+ * existe es peor que no declarar ninguno.
+ */
+export const EMAIL_DE_EJEMPLO = "hola@deltaprive.com.ar";
+
 export const site = {
   brand: "Delta Privé",
-  contactEmail: "hola@deltaprive.com.ar",
+  contactEmail: EMAIL_DE_EJEMPLO,
   instagram: "https://instagram.com",
 
   /**
