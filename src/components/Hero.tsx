@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Anchor, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import HeroVideo from "@/components/HeroVideo";
-import { site } from "@/lib/site";
+import TopBar from "@/components/TopBar";
 
 const container = {
   hidden: {},
@@ -44,18 +44,8 @@ export default function Hero() {
         }}
       />
 
-      {/* Marca */}
-      <motion.div
-        initial={{ opacity: 0, y: -14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, delay: 0.15 }}
-        className="absolute top-8 left-1/2 flex -translate-x-1/2 items-center gap-2.5 sm:top-10"
-      >
-        <Anchor className="h-4 w-4 text-champagne" strokeWidth={1.25} />
-        <span className="font-serif text-sm tracking-[0.35em] text-pearl/90 uppercase">
-          {site.brand}
-        </span>
-      </motion.div>
+      {/* Marca y selector de idioma */}
+      <TopBar />
 
       {/* Contenido */}
       <motion.div
@@ -119,7 +109,7 @@ export default function Hero() {
           transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
           className="block"
         >
-          <ChevronDown className="h-5 w-5" strokeWidth={1} />
+          <ChevronDown className="h-5 w-5" strokeWidth={1} aria-hidden="true" />
         </motion.span>
       </motion.a>
     </section>

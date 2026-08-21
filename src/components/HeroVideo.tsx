@@ -80,11 +80,28 @@ export default function HeroVideo() {
       video.addEventListener("ended", onEnded);
     }
 
-    void first.play().catch(() => {});
-    frame = requestAnimationFrame(tick);
+    /**
+     * El video es decorativo y pesa varios MB: si empieza a bajar junto con el
+     * HTML, la fuente y el CSS, compite por ancho de banda con lo que sí pinta
+     * el Largest Contentful Paint (el título del hero). Por eso los dos <video>
+     * salen con `preload="none"` y recién acá, después del `load` de la página,
+     * les pedimos que carguen.
+     */
+    const arrancar = () => {
+      for (const video of layers) video.preload = "auto";
+      void first.play().catch(() => {});
+      frame = requestAnimationFrame(tick);
+    };
+
+    if (document.readyState === "complete") {
+      arrancar();
+    } else {
+      window.addEventListener("load", arrancar, { once: true });
+    }
 
     return () => {
       cancelAnimationFrame(frame);
+      window.removeEventListener("load", arrancar);
       for (const video of layers) {
         video.removeEventListener("timeupdate", maybeSwap);
         video.removeEventListener("ended", onEnded);
@@ -99,10 +116,9 @@ export default function HeroVideo() {
     <div className="absolute inset-0 bg-abyss">
       <video
         ref={firstRef}
-        autoPlay
         muted
         playsInline
-        preload="auto"
+        preload="none"
         aria-hidden="true"
         className={layerClass}
         style={{ opacity: 1, transition }}
@@ -114,7 +130,7 @@ export default function HeroVideo() {
         ref={secondRef}
         muted
         playsInline
-        preload="auto"
+        preload="none"
         aria-hidden="true"
         className={layerClass}
         style={{ opacity: 0, transition }}

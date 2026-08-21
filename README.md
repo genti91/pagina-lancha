@@ -77,6 +77,57 @@ en el `.env.local`:
 Como no se escribe nada en disco, funciona sin cambios en Vercel o cualquier
 entorno serverless.
 
+## SEO
+
+> **Antes de deployar:** definí `NEXT_PUBLIC_SITE_URL` con el dominio real, sin
+> barra final. De ahí salen las URLs canónicas, los `hreflang`, el sitemap y las
+> tarjetas de Open Graph. Si queda el valor por defecto, le estás diciendo a
+> Google que indexe otro dominio.
+
+| Qué                                                      | Dónde                                     |
+| -------------------------------------------------------- | ----------------------------------------- |
+| Títulos, descripciones, canónica, hreflang, OG y Twitter | `src/app/[locale]/layout.tsx`             |
+| Textos indexables (título, descripción, `og:image:alt`)  | `messages/*.json`, clave `meta`           |
+| Datos estructurados (JSON-LD)                            | `src/components/JsonLd.tsx`               |
+| Tarjeta que se ve al compartir el link                   | `src/lib/og-image.tsx`                    |
+| Dominio, coordenadas y hreflang                          | `src/lib/seo.ts`                          |
+| `sitemap.xml` y `robots.txt`                             | `src/app/sitemap.ts`, `src/app/robots.ts` |
+
+### Datos estructurados
+
+Se emite un `@graph` con cuatro nodos enlazados por `@id`: `TravelAgency` (el
+negocio, con área de servicio, coordenadas e idiomas), `TouristAttraction` (el
+Delta del Tigre), `TouristTrip` (la experiencia) y `WebSite`.
+
+No se usa `BoatReservation`: ese tipo modela una reserva concreta ya hecha, con
+su número y su pasajero, no un servicio que se ofrece. Ponerlo en una landing
+sería declarar una reserva inventada.
+
+Para validar después de deployar: [Rich Results Test](https://search.google.com/test/rich-results)
+y [Schema Markup Validator](https://validator.schema.org/).
+
+### Tarjeta de Open Graph
+
+Se dibuja con `next/og` en vez de subir un JPG, así el texto sale en el idioma
+de cada versión y se actualiza solo si cambia el copy. Hay una por idioma, en
+1200×630.
+
+Usa la tipografía por defecto de `next/og`, no Playfair Display: para que salga
+en la serif de la marca hay que dejar un `.ttf` en el repo y pasárselo en
+`fonts` a `ImageResponse`.
+
+### Rendimiento
+
+El video del hero sale con `preload="none"` y recién se pide después del evento
+`load` de la página (`src/components/HeroVideo.tsx`). Así no compite por ancho
+de banda con lo que pinta el Largest Contentful Paint, que en esta página es el
+título del hero.
+
+No hay ninguna imagen de contenido todavía: los únicos gráficos son iconos SVG
+en línea de `lucide-react`, que van marcados `aria-hidden` porque el texto que
+los acompaña ya dice lo mismo. `next.config.ts` deja AVIF y WebP configurados
+para cuando se sumen fotos de la lancha.
+
 ## Personalización
 
 - **Textos**: `messages/*.json`
@@ -143,19 +194,27 @@ src/
 │   ├── favicon.ico       Ancla náutica (navegadores viejos)
 │   ├── icon.svg          Ancla náutica (navegadores modernos)
 │   ├── globals.css       Paleta (abyss / navy / champagne / pearl)
+│   ├── sitemap.ts        sitemap.xml con las tres variantes de idioma
+│   ├── robots.ts         robots.txt apuntando al sitemap
 │   ├── actions.ts        Server Action: valida y manda a Google Sheets
 │   └── [locale]/
-│       ├── layout.tsx    Fuentes, metadata traducida y provider de i18n
-│       └── page.tsx      Composición de la landing
+│       ├── layout.tsx        Fuentes, metadata SEO completa y provider de i18n
+│       ├── opengraph-image.tsx Tarjeta para compartir (por idioma)
+│       ├── twitter-image.tsx   Idem para Twitter/X
+│       └── page.tsx            Composición de la landing
 ├── components/
 │   ├── Hero.tsx              100vh con video de fondo y CTA
 │   ├── HeroVideo.tsx         Loop del video con fundido en el empalme
+│   ├── TopBar.tsx            Marca + selector de idioma, en una sola fila
 │   ├── About.tsx             Teaser del proyecto en el astillero
 │   ├── WaitlistForm.tsx      Formulario + mensaje de éxito
-│   ├── LanguageSwitcher.tsx  ES | EN | PT, arriba a la derecha
+│   ├── LanguageSwitcher.tsx  ES | EN | PT (lo ubica quien lo usa)
+│   ├── JsonLd.tsx            Datos estructurados schema.org
 │   └── Footer.tsx
 └── lib/
     ├── site.ts           Marca, contacto y video
+    ├── seo.ts            Dominio, hreflang y coordenadas
+    ├── og-image.tsx      Diseño de la tarjeta para compartir
     ├── sheets.ts         Conexión con Google Sheets
     └── waitlist.ts       Tipos y estado del formulario
 ```

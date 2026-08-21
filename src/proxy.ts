@@ -17,6 +17,13 @@ export const config = {
    * si no, `/videos/hero.mp4` entra al proxy y termina redirigido a
    * `/en/videos/hero.mp4`, que no existe. Usamos `[.]` en vez de un punto
    * escapado para que se lea mejor.
+   *
+   * Las tarjetas de Open Graph (`/es/opengraph-image/...`) tampoco pasan por
+   * acá: no tienen punto en la URL, así que el proxy les sacaba el prefijo
+   * `/es` y respondían con un 307. Terminaban resolviendo, pero obligaban a
+   * cada scraper (WhatsApp, Facebook) a seguir una redirección de más.
    */
-  matcher: ["/((?!api|_next|_vercel|.*[.].*).*)"],
+  matcher: [
+    "/((?!api|_next|_vercel|.*[.].*|.*opengraph-image|.*twitter-image).*)",
+  ],
 };

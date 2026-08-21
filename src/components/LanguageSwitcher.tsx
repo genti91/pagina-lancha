@@ -6,9 +6,15 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { localeLabels, routing } from "@/i18n/routing";
 
 /**
- * Selector de idioma discreto, fijo en la esquina superior derecha.
+ * Selector de idioma discreto. No se posiciona a sí mismo: lo ubica quien lo
+ * usa (la barra superior del hero y el pie de página), así nunca queda
+ * flotando encima de otro elemento.
  */
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({
+  className = "",
+}: {
+  className?: string;
+}) {
   const activeLocale = useLocale();
   const pathname = usePathname();
   const t = useTranslations("language");
@@ -16,7 +22,7 @@ export default function LanguageSwitcher() {
   return (
     <nav
       aria-label={t("label")}
-      className="animate-fade-in fixed top-7 right-6 z-50 flex items-center gap-2.5 sm:top-9 sm:right-10"
+      className={`flex shrink-0 items-center gap-2.5 ${className}`}
     >
       {routing.locales.map((locale, index) => (
         <Fragment key={locale}>

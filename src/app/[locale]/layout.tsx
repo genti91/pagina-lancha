@@ -3,8 +3,15 @@ import { notFound } from "next/navigation";
 import { Inter, Playfair_Display } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { routing } from "@/i18n/routing";
+import {
+  alternateOgLocales,
+  GEO,
+  languageAlternates,
+  localeUrl,
+  ogLocales,
+  SITE_URL,
+} from "@/lib/seo";
 import { site } from "@/lib/site";
 import "../globals.css";
 
@@ -30,16 +37,57 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "meta" });
+  const activo = hasLocale(routing.locales, locale)
+    ? locale
+    : routing.defaultLocale;
+  const t = await getTranslations({ locale: activo, namespace: "meta" });
+
+  const title = t("title");
+  const description = t("description");
+  const url = localeUrl(activo);
 
   return {
-    title: t("title"),
-    description: t("description"),
+    // Resuelve las rutas relativas de canonical, hreflang y og:image.
+    metadataBase: new URL(SITE_URL),
+    title,
+    description,
+    applicationName: site.brand,
+    alternates: {
+      canonical: url,
+      languages: languageAlternates(),
+    },
     openGraph: {
-      title: t("title"),
-      description: t("description"),
-      siteName: site.brand,
       type: "website",
+      url,
+      siteName: site.brand,
+      title,
+      description,
+      locale: ogLocales[activo],
+      alternateLocale: alternateOgLocales(activo),
+      // Las imágenes las agrega Next desde `opengraph-image.tsx`.
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    },
+    // Ayuda a Google a ubicar el negocio para búsquedas locales.
+    other: {
+      "geo.region": "AR-B",
+      "geo.placename": "Tigre, Buenos Aires",
+      "geo.position": `${GEO.latitude};${GEO.longitude}`,
+      ICBM: `${GEO.latitude}, ${GEO.longitude}`,
     },
   };
 }
@@ -74,10 +122,7 @@ export default async function LocaleLayout({
         className="min-h-full bg-abyss font-sans text-pearl"
         suppressHydrationWarning
       >
-        <NextIntlClientProvider>
-          <LanguageSwitcher />
-          {children}
-        </NextIntlClientProvider>
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
   );
