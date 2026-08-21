@@ -109,7 +109,7 @@ export default function Hero() {
           transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
           className="block"
         >
-          <ChevronDown className="h-5 w-5" strokeWidth={1} />
+          <ChevronDown className="h-5 w-5" strokeWidth={1} aria-hidden="true" />
         </motion.span>
       </motion.a>
     </section>
