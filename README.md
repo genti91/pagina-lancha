@@ -150,9 +150,10 @@ src/
 ├── components/
 │   ├── Hero.tsx              100vh con video de fondo y CTA
 │   ├── HeroVideo.tsx         Loop del video con fundido en el empalme
+│   ├── TopBar.tsx            Marca + selector de idioma, en una sola fila
 │   ├── About.tsx             Teaser del proyecto en el astillero
 │   ├── WaitlistForm.tsx      Formulario + mensaje de éxito
-│   ├── LanguageSwitcher.tsx  ES | EN | PT, arriba a la derecha
+│   ├── LanguageSwitcher.tsx  ES | EN | PT (lo ubica quien lo usa)
 │   └── Footer.tsx
 └── lib/
     ├── site.ts           Marca, contacto y video

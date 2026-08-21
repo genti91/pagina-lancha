@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { Inter, Playfair_Display } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { routing } from "@/i18n/routing";
 import { site } from "@/lib/site";
 import "../globals.css";
@@ -74,10 +73,7 @@ export default async function LocaleLayout({
         className="min-h-full bg-abyss font-sans text-pearl"
         suppressHydrationWarning
       >
-        <NextIntlClientProvider>
-          <LanguageSwitcher />
-          {children}
-        </NextIntlClientProvider>
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
   );
